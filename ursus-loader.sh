@@ -3,7 +3,7 @@
 UDIR=../ursus
 export UDIR
 
-COQV="8.13.0"
+COQV="8.13.2"
 export COQV
 
 OCAML="4.12.0"
@@ -21,7 +21,7 @@ function clonerepos() {
 	REPODIR=`echo $i | sed -e 's/^.*\/\([^.]*\)[^/]*$/\1/'`
 	if [ -d "$REPODIR" ] ; then
 	    cd $REPODIR
-	    git pull origin main
+	    git pull origin flex
 	    if [ $? -ne 0 ] ; then
 		echo "Pull failed $i"
 		exit 255
@@ -31,7 +31,9 @@ function clonerepos() {
 	    if [ $? -ne 0  ] ; then
 		echo "Bad repository $i"
 		exit 255
-	    fi 
+	    fi
+	    cd $REPODIR
+	    git checkout flex
 	fi
 	cd "$PWDD"
     done
@@ -125,7 +127,7 @@ PWDD="$(pwd)"
 	cd $REPODIR
 	echo "Compiling $REPODIR"
 	sleep 1
-	dune clean && dune build && opam install -y .
+	opam install -y .
 	if [ $? -ne "0" ] ; then
 	    echo "Compilation failed"
 	    exit 255
@@ -140,5 +142,5 @@ if [[ -n "$1" ]] && [[ $1 == "clean" ]] ; then
     exit
 fi
 
-createrepos && installcc && installmake && installopam && installcoq && installdune && installelpi && compileall && exit 0
+createrepos && installcc && installmake && installopam && installcoq && installdune && installelpi && exit 0
 exit 255

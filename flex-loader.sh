@@ -1,13 +1,14 @@
 #!/usr/bin/bash
 
-REPO="git@vcs.modus-ponens.com:ton/pruvendo-flex-contract.git"
-BRANCH="develop"
+REPO="https://github.com/Pruvendo/pruvendo-flex-contract.git"
+BRANCH="main"
 
 function loadrepo() {
     REPODIR=`echo $REPO | sed -e 's/^.*\/\([^.]*\)[^/]*$/\1/'`
     PPWD=`pwd`
     if [ -d "../$REPODIR" ] ; then
         cd ../$REPODIR
+	git stash
 	git pull origin $BRANCH
 	if [ $? -ne "0" ] ; then
 	    echo "Pulling error $REPO"
@@ -28,8 +29,12 @@ function loadrepo() {
 
 function compileit() {
     REPODIR=`echo $REPO | sed -e 's/^.*\/\([^.]*\)[^/]*$/\1/'`
+    cp ./Makefile.flex ../$REPODIR/Makefile
     cd ../$REPODIR
-    dune clean && dune build && opam install -y .
+    #dune clean && dune build && opam install -y .
+    eval $(opam env)
+    find . -name "*.v" -print >> _CoqProject
+    make
     if [ $? -ne "0" ] ; then
 	echo "Compilation error"
     fi
