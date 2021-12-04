@@ -4,7 +4,7 @@ REPO="git@vcs.modus-ponens.com:ton/pruvendo-flex-contract.git"
 BRANCH="develop"
 
 function loadrepo() {
-    REPODIR=`echo $REPO | sed -e 's/[^/]*\/\([^.]*\).*$/\1/'`
+    REPODIR=`echo $REPO | sed -e 's/^.*\/\([^.]*\)[^/]*$/\1/'`
     PPWD=`pwd`
     if [ -d "../$REPODIR" ] ; then
         cd ../$REPODIR
@@ -27,7 +27,7 @@ function loadrepo() {
 }
 
 function compileit() {
-    REPODIR=`echo $REPO | sed -e 's/[^/]*\/\([^.]*\).*$/\1/'`
+    REPODIR=`echo $REPO | sed -e 's/^.*\/\([^.]*\)[^/]*$/\1/'`
     cd ../$REPODIR
     dune clean && dune build && opam install -y .
     if [ $? -ne "0" ] ; then

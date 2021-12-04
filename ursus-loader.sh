@@ -18,7 +18,7 @@ function clonerepos() {
     PWDD="$(pwd)"
     for i in `cat repos-list` ; do
 	cd $UDIR
-	REPODIR=`echo $i | sed -e 's/[^/]*\/\([^.]*\).*$/\1/'`
+	REPODIR=`echo $i | sed -e 's/^.*\/\([^.]*\)[^/]*$/\1/'`
 	if [ -d "$REPODIR" ] ; then
 	    cd $REPODIR
 	    git pull origin master
@@ -121,7 +121,7 @@ function compileall() {
 PWDD="$(pwd)"
     for i in `cat repos-list` ; do
 	cd $UDIR
-	REPODIR=`echo $i | sed -e 's/[^/]*\/\([^.]*\).*$/\1/'`
+	REPODIR=`echo $i | sed -e 's/^.*\/\([^.]*\)[^/]*$/\1/'`
 	cd $REPODIR
 	echo "Compiling $REPODIR"
 	sleep 1
