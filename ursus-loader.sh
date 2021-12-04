@@ -140,4 +140,5 @@ if [[ -n "$1" ]] && [[ $1 == "clean" ]] ; then
     exit
 fi
 
-createrepos && installcc && installmake && installopam && installcoq && installdune && installelpi && compileall
+createrepos && installcc && installmake && installopam && installcoq && installdune && installelpi && compileall && exit 0
+exit 255
