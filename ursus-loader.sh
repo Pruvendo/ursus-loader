@@ -21,7 +21,7 @@ function clonerepos() {
 	REPODIR=`echo $i | sed -e 's/^.*\/\([^.]*\)[^/]*$/\1/'`
 	if [ -d "$REPODIR" ] ; then
 	    cd $REPODIR
-	    git pull origin master
+	    git pull origin main
 	    if [ $? -ne 0 ] ; then
 		echo "Pull failed $i"
 		exit 255
