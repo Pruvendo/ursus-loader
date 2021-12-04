@@ -1,5 +1,5 @@
-git@vcs.modus-ponens.com:ton/coq-finproof-base.git
-git@vcs.modus-ponens.com:ton/pruvendo-base-lib.git
-git@vcs.modus-ponens.com:ton/solidity-monadic-language.git
-git@vcs.modus-ponens.com:ton/ursus-standard-library.git
-git@vcs.modus-ponens.com:ton/pruvendo-ursus-tvm.git
+https://github.com/Pruvendo/coq-finproof-base.git
+https://github.com/Pruvendo/pruvendo-base-lib.git
+https://github.com/Pruvendo/solidity-monadic-language.git
+https://github.com/Pruvendo/ursus-standard-library.git
+https://github.com/Pruvendo/pruvendo-ursus-tvm.git
