@@ -56,6 +56,15 @@ function installcc() {
 }
 
 
+function installmake() {
+    exists make
+    if [ $? -ne "0" ] ; then
+    sudo apt-get -y install make
+    fi
+
+}
+
+
 function installopam() {
     exists opam
     if [ $? -ne "0" ] ; then
@@ -65,15 +74,29 @@ function installopam() {
 	sudo apt -y install opam
 	opam -y init
 	eval $(opam env)
+    fi
+    SWITCHCOQ=`opam switch | grep "with-coq" | grep $OCAML | wc -l`
+    if [ $SWITCHCOQ -eq "0"  ] ; then
 	opam switch create --jobs=1 with-coq $OCAML
 	opam switch with-coq
+        opam update
+	opam upgrade
     fi
-    opam update
-    opam upgrade
 }
 
+
 function installcoq() {
-    opam pin add -y coq $COQV
+    eval $(opam env)
+    exists coqc
+    COQCEXISTS=$?
+    if [ $COQCEXISTS -eq "0" ] ; then
+	CURCOQV=`coqc -v | grep Coq | sed -e 's/^[^8]*\([0-9.]*\).*$/\1/'`
+	echo $CURCOQV
+    fi
+    if [[ $COQCEXISTS -ne "0" ]] || [[ "$COQV" != "$CURCOQV" ]] ; then
+        opam pin add -y coq $COQV
+	eval $(opam env)
+    fi
 }
 
 if [[ -n "$1" ]] && [[ $1 == "clean" ]] ; then
@@ -81,4 +104,4 @@ if [[ -n "$1" ]] && [[ $1 == "clean" ]] ; then
     exit
 fi
 
-createrepos && installcc && installopam && installcoq
+createrepos && installcc && installmake && installopam && installcoq
