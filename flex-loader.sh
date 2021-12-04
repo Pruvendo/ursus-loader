@@ -29,12 +29,12 @@ function loadrepo() {
 
 function compileit() {
     REPODIR=`echo $REPO | sed -e 's/^.*\/\([^.]*\)[^/]*$/\1/'`
-    cp ./Makefile.flex ../$REPODIR/Makefile
+#    cp ./Makefile.flex ../$REPODIR/Makefile
     cd ../$REPODIR
-    #dune clean && dune build && opam install -y .
     eval $(opam env)
-    find . -name "*.v" -print >> _CoqProject
-    make
+    dune clean && dune build && opam install -y .
+    #find . -name "*.v" -print >> _CoqProject
+    #make
     if [ $? -ne "0" ] ; then
 	echo "Compilation error"
     fi

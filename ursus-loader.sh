@@ -127,7 +127,7 @@ PWDD="$(pwd)"
 	cd $REPODIR
 	echo "Compiling $REPODIR"
 	sleep 1
-	opam install -y .
+	dune clean && dune build && opam install -y .
 	if [ $? -ne "0" ] ; then
 	    echo "Compilation failed"
 	    exit 255
@@ -142,5 +142,5 @@ if [[ -n "$1" ]] && [[ $1 == "clean" ]] ; then
     exit
 fi
 
-createrepos && installcc && installmake && installopam && installcoq && installdune && installelpi && exit 0
+createrepos && installcc && installmake && installopam && installcoq && installdune && installelpi && compileall && exit 0
 exit 255
