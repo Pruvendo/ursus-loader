@@ -3,8 +3,11 @@
 UDIR=../ursus
 export UDIR
 
-COQV=8.13.0
+COQV="8.13.0"
 export COQV
+
+OCAML="4.12.0"
+export OCAML
 
 function clean() {
     rm -rf $UDIR
@@ -45,19 +48,32 @@ function exists() {
     type "$1" >/dev/null 2>/dev/null
 }
 
+function installcc() {
+    exists cc
+    if [ $? -ne "0" ] ; then
+	sudo apt-get -y install gcc
+    fi
+}
+
+
 function installopam() {
     exists opam
     if [ $? -ne "0" ] ; then
+	echo "Installing opam"
 	sudo add-apt-repository -y ppa:avsm/ppa
 	sudo apt -y update
 	sudo apt -y install opam
 	opam -y init
 	eval $(opam env)
+	opam switch create --jobs=1 with-coq $OCAML
+	opam switch with-coq
     fi
+    opam update
+    opam upgrade
 }
 
 function installcoq() {
-    opam pin add coq 8.14.0
+    opam pin add -y coq $COQV
 }
 
 if [[ -n "$1" ]] && [[ $1 == "clean" ]] ; then
@@ -65,6 +81,4 @@ if [[ -n "$1" ]] && [[ $1 == "clean" ]] ; then
     exit
 fi
 
-createrepos
-installopam
-installcoq
+createrepos && installcc && installopam && installcoq
