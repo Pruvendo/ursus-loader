@@ -99,9 +99,45 @@ function installcoq() {
     fi
 }
 
+function installdune() {
+    exists dune
+    if [ $? -ne "0" ] ; then
+	opam install dune
+    fi
+}
+
+function installelpi() {
+    ELPI=`opam list | grep elpi | wc -l`
+    if [ $ELPI -eq "0" ] ; then
+	opam repo add coq-released https://coq.inria.fr/opam/released
+	opam update
+	opam repository add coq-released --all-switches
+	opam upgrade
+	opam install coq-elpi
+    fi
+}
+
+function compileall() {
+PWDD="$(pwd)"
+    for i in `cat repos-list` ; do
+	cd $UDIR
+	REPODIR=`echo $i | sed -e 's/[^/]*\/\([^.]*\).*$/\1/'`
+	cd $REPODIR
+	echo "Compiling $REPODIR"
+	sleep 1
+	dune clean && dune build && opam install -y .
+	if [ $? -ne "0" ] ; then
+	    echo "Compilation failed"
+	    exit 255
+	fi
+	cd "$PWDD"
+    done
+
+}
+
 if [[ -n "$1" ]] && [[ $1 == "clean" ]] ; then
     clean
     exit
 fi
 
-createrepos && installcc && installmake && installopam && installcoq
+createrepos && installcc && installmake && installopam && installcoq && installdune && installelpi && compileall
